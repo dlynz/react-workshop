@@ -52,6 +52,7 @@ int main(int argc, char **argv) {
     printf(CMD_HELP);
     print_escape(ANSI_ALL_RESET ANSI_TEXT_BOLD);
     printf(".\n\n");
+
     char *search_bytes, 
     int size, 
     struct content_result *results_array[], 
@@ -150,6 +151,81 @@ void list_current_directory(void) {
         free(filenames[i]);
         free(permissionsString);
     }
+    print_escape(ANSI_ALL_RESET);
+
+    char command_buf[MAX_COMMAND_LENGTH];
+    char *argument;
+
+    while (get_command(command_buf, &argument)) {
+        // Scan in commands until EOF.
+        int i;
+        for (i = 0; i < NUM_COMMANDS; i++) {
+            // Scan through the list of commands to try find a match.
+            if (!strcmp(commands[i].name, command_buf) ||
+                !strcmp(commands[i].alias, command_buf)) {
+                // If a match is found, invoke the handler!
+                commands[i].handler(argument);
+                break;
+            }
+        }
+
+
+        if (i == NUM_COMMANDS) {
+            // If we reached the end, there was no match.
+
+            char *buf_iter = command_buf;
+
+            while (*buf_iter) {
+                if (!isspace((unsigned char)*buf_iter)) break;
+                buf_iter++;
+            }
+
+            if (*buf_iter) {
+                printf("Unknown command: %s\n", command_buf);
+            }
+        }
+
+        if (argument != NULL) {
+            // argument is malloced by get_command, so free it.
+            free(argument);
+        }
+    }
+
+    do_quit(NULL);
+    return 0;
+}
+
+    char *input_buf = malloc(MAX_INPUT_LEN);
+    if (input_buf == NULL) {
+        perror("malloc");
+        return false;
+    }
+
+    if (fgets(input_buf, MAX_INPUT_LEN, stdin) == NULL) {
+        free(input_buf);
+        return false;
+    }
+
+    // If stdin is not a terminal, echo the input back.
+    // helps with reading autotest output.
+    if (!isatty(STDIN_FILENO)) {
+        printf("%s", input_buf);
+    }
+
+    // Remove the newline stored by fgets, if any.
+    char *newline_ptr = strchr(input_buf, '\n');
+    if (newline_ptr != NULL) {
+        *newline_ptr = '\0';
+    }
+
+    // Split the input into the command and argument if there is one.
+    char *sep_ptr = strchr(input_buf, ' ');
+    if (sep_ptr == NULL) {
+        // Both buffers are of the same size.
+        strcpy(command, input_buf);
+        *argument = NULL;
+    } else {
+        *sep_ptr = '\0';
         // Both buffers are of the same size.
         strcpy(command, input_buf);
         sep_ptr++;
@@ -443,3 +519,4 @@ void do_quit(char *argument) {
     printf("Thanks for using %s. Have a nice day!\n", PROGRAM_NAME);
     exit(0);
 }
+
