@@ -52,6 +52,105 @@ int main(int argc, char **argv) {
     printf(CMD_HELP);
     print_escape(ANSI_ALL_RESET ANSI_TEXT_BOLD);
     printf(".\n\n");
+
+    char *search_bytes, 
+    int size, 
+    struct content_result *results_array[], 
+    int *result_count);
+uint8_t cyclic_bit_shift(u_int8_t byte, int shift_amount);
+// Some provided strings which you may find useful. Do not modify.
+const char *const MSG_ERROR_FILE_STAT  = "Could not stat file.\n";
+const char *const MSG_ERROR_FILE_OPEN  = "Could not open file.\n";
+const char *const MSG_ERROR_CHANGE_DIR = "Could not change directory.\n";
+const char *const MSG_ERROR_DIRECTORY  =
+    "tide does not support encrypting directories.\n";
+const char *const MSG_ERROR_READ       =
+    "group does not have permission to read this file.\n";
+const char *const MSG_ERROR_WRITE      =
+    "group does not have permission to write here.\n";
+const char *const MSG_ERROR_RESERVED   =
+    "'.' and '..' are reserved filenames, please search for something else.\n";
+
+/////////////////////////////////// SUBSET 0 ///////////////////////////////////
+
+// Print the name of the current directory.
+void print_current_directory(void) {
+    char pathname[MAX_PATH_LEN];
+    if (getcwd(pathname, sizeof(pathname)) == NULL) {
+        perror("getcwd");
+    }
+    printf("The current directory is: %s\n", pathname);
+
+}
+
+// Change the current directory to the given pathname.
+void change_current_directory(char *directory) {
+    char *home = getenv("HOME");
+    if (home == NULL) {
+        fprintf(stdout, "Could not retrieve home directory.\n");
+        return;
+    }
+
+    char pathname[MAX_PATH_LEN];
+
+    if (directory[0] == '~') {
+        // Pathname case for '~'
+        snprintf(pathname, MAX_PATH_LEN, "%s/%s", home, directory + 1);
+    } else {
+        if (directory[0] != '/') {
+            if (getcwd(pathname, MAX_PATH_LEN) == NULL) {
+                perror("getcwd");
+                return;
+            }
+            strcat(pathname, "/");
+            strcat(pathname, directory);
+        } else {
+            strcpy(pathname, directory);
+        }
+    }
+
+    // If couldn't change directory
+    if (chdir(pathname) == -1) {
+        fprintf(stdout, "%s", MSG_ERROR_CHANGE_DIR);
+        return;
+    } 
+
+    // Prints for either home or new directory
+    if (strcmp(directory, "~") == 0) {
+        printf("Moving to %s\n", home);
+    } else {
+        printf("Moving to %s\n", directory);
+    }
+}
+
+// List the contents of the current directory.
+void list_current_directory(void) {
+    DIR *current_directory = opendir(".");
+    if (current_directory == NULL) {
+        perror("opendir");
+        return;
+    }
+
+    // Get all the filenames in the directory and add them to filenames array
+    struct dirent *entry;
+    char *filenames[MAX_LISTINGS];
+    int counter = 0;
+    while ((entry = readdir(current_directory)) != NULL) {
+        char pathname[MAX_PATH_LEN];
+        strcpy(pathname, entry->d_name);
+        filenames[counter] = strdup(pathname);
+        counter++;
+    }
+
+    // Sort the filenames
+    sort_strings(filenames, counter);
+
+    for (int i = 0; i < counter; i++) {
+        char *permissionsString = getPermissionsString(filenames[i]);
+        printf("%s\t%s\n", permissionsString, filenames[i]);
+        free(filenames[i]);
+        free(permissionsString);
+    }
     print_escape(ANSI_ALL_RESET);
 
     char command_buf[MAX_COMMAND_LENGTH];
@@ -95,14 +194,6 @@ int main(int argc, char **argv) {
     do_quit(NULL);
     return 0;
 }
-
-bool get_command(char *command, char **argument) {
-    // Print prompt.
-    print_escape(ANSI_COL_CYAN ANSI_TEXT_BOLD);
-    printf(PROGRAM_NAME);
-    print_escape(ANSI_ALL_RESET ANSI_TEXT_BOLD);
-    printf("> ");
-    print_escape(ANSI_ALL_RESET);
 
     char *input_buf = malloc(MAX_INPUT_LEN);
     if (input_buf == NULL) {
