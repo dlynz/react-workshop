@@ -1,6 +1,6 @@
 function Buildings() {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 pl-4 pr-4 pt-2 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 pl-4 pr-4 pt-2 mb-4">
         {buildings.map((b) => (
           <Building
             key={b.name}
@@ -15,16 +15,27 @@ function Buildings() {
 
 function Building({ name, rooms_available, building_picture }) {
     return (
-        <button className="group">
-          <img
-            src={building_picture}
-            alt={name}
-            className="w-full h-40 object-cover rounded-xl mb-3
-              group-hover:scale-105 group-hover:brightness-80 duration-300"
-          />
-          <h3 className="text-lg font-semibold">{name}</h3>
-          <p className="inline-block text-sm text-gray-600 bg-green-100 rounded-md mt-2 pl-2 pr-2 outline-1 outline-green-500">{rooms_available} rooms available</p>
-        </button>
+      <button className="flex-grow basis-0 relative group aspect-square hover:scale-102 duration-300">
+        <img
+          src={building_picture}
+          alt={name}
+          className="absolute top-0 z-0 h-full object-cover rounded-xl
+            group-hover:brightness-80 duration-300"
+        />
+        <div className="flex absolute top-0 z-10 w-full justify-end">
+          <div className="flex items-center rounded-lg bg-white m-2">
+            <div className="rounded-full w-2 h-2 bg-green-500 ml-4"></div>
+            <p className="text-xs font-semibold rounded-md pl-2 p-3 pr-4 bg-white">
+              {rooms_available} rooms available
+            </p>
+          </div>
+        </div>
+        <div className="absolute flex bottom-0 w-full h-18">
+          <div className="flex items-center bg-orange-500 w-full h-14 m-2 rounded-lg">
+            <p className="text-sm text-white text-left font-semibold m-4">{name}</p>
+          </div>
+        </div>
+      </button>
     )
 }
 

@@ -9,9 +9,9 @@ function App() {
       {/* Header */}
       <Header/>
       {/* divider */}
-      <div className="h-0.5 w-full mt-3 bg-gray-300"></div>
+      <div className="h-px w-full mt-2 bg-gray-300"></div>
       {/* Body */}
-      <div className="pl-2">
+      <div className="pl-2 pr-2">
         <div className=''>
           <SearchBar/>
         </div>
