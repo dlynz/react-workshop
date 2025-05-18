@@ -4,17 +4,20 @@ import SearchIcon from '@mui/icons-material/Search';
 
 function SearchBar({ setSearch }) {
     return (
-      <div className="flex ml-4 mr-4 mt-3 mb-2 items-stretch gap-3">
+      <div className="flex ml-4 mr-4 pt-3 mb-2 items-stretch gap-3">
         <div
           className="
             flex min-w-1/2 items-center p-2 border-2 border-gray-300 rounded-md outline-0 outline-gray-500
             focus-within:border-orange-500 focus-within:outline-1 focus-within:outline-offset-4
-            focus-within:outline-transparent justify-items-stretch
-            transition-all duration-200 ease-in-out mr-auto"
+            focus-within:outline-transparent
+            dark:border-gray-600 dark:outline-gray-500
+            dark:focus-within:border-orange-500 dark:focus-within:outline-1 dark:focus-within:outline-offset-4
+            dark:focus-within:outline-transparent
+            justify-items-stretch transition-all duration-300 ease-in-out mr-auto"
           >
           <SearchIcon className="text-gray-500" />
           <input
-            className = "flex-grow outline-none placeholder:text-gray-400"
+            className = "flex-grow outline-none placeholder:text-gray-400 dark:text-white"
             type="text"
             placeholder="Search for a building..."
             onChange={e => setSearch(e.target.value)}

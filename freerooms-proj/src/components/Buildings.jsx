@@ -4,7 +4,7 @@ function Buildings({ search }) {
     );
 
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 pl-4 pr-4 pt-2 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5 pl-4 pr-4 pt-2 pb-4">
         {filteredBuildings.map((b) => (
           <Building
             key={b.name}
@@ -27,9 +27,9 @@ function Building({ name, rooms_available, building_picture }) {
             group-hover:brightness-80 duration-300"
         />
         <div className="flex absolute top-0 z-10 w-full justify-end">
-          <div className="flex items-center rounded-xl bg-white m-2">
-            <div className="rounded-full w-2 h-2 bg-green-500 ml-4"></div>
-            <p className="text-xs font-semibold pl-2 p-3 pr-4">
+          <div className="flex items-center rounded-xl bg-white m-2 dark:bg-gray-900 duration-300">
+            <div className={`rounded-full w-2 h-2 ${rooms_available <= 5 ? "bg-yellow-500" : "bg-green-500"} ml-4`}></div>
+            <p className="text-xs font-semibold pl-2 p-3 pr-4 dark:text-white duration-300">
               {rooms_available} rooms available
             </p>
           </div>

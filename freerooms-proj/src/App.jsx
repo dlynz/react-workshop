@@ -9,11 +9,11 @@ function App() {
   const [search, setSearch] = useState("");
 
   return (
-    <>
+    <div className="min-h-screen dark:bg-gray-900 duration-300">
       {/* Header */}
       <Header/>
-      {/* divider */}
-      <div className="h-px w-full mt-2 bg-gray-300"></div>
+      {/* Divider */}
+      <div className="h-px w-full bg-gray-300 dark:bg-gray-700 duration-300"></div>
       {/* Body */}
       <div className="pl-2 pr-2">
         <div>
@@ -23,7 +23,7 @@ function App() {
           <Buildings search={search}/>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
