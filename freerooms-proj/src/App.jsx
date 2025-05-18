@@ -1,6 +1,6 @@
 import SearchBar from './components/SearchBar'
 import './App.css'
-import Room from './components/Room'
+import Buildings from './components/Buildings'
 import Header from './components/Header'
 
 function App() {
@@ -15,11 +15,8 @@ function App() {
         <div className=''>
           <SearchBar/>
         </div>
-        <div className="flex align-content-end flex-wrap mt-1">
-          <Room/>
-          <Room/>
-          <Room/>
-          <Room/>
+        <div className="mt-1">
+          <Buildings/>
         </div>
       </div>
     </>
