@@ -3,7 +3,11 @@ import './App.css'
 import Buildings from './components/Buildings'
 import Header from './components/Header'
 
+import { useState } from 'react';
+
 function App() {
+  const [search, setSearch] = useState("");
+
   return (
     <>
       {/* Header */}
@@ -12,11 +16,11 @@ function App() {
       <div className="h-px w-full mt-2 bg-gray-300"></div>
       {/* Body */}
       <div className="pl-2 pr-2">
-        <div className=''>
-          <SearchBar/>
+        <div>
+          <SearchBar setSearch={setSearch}/>
         </div>
         <div className="mt-1">
-          <Buildings/>
+          <Buildings search={search}/>
         </div>
       </div>
     </>
