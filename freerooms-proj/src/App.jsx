@@ -1,14 +1,14 @@
 import './App.css'
 
+// import { useState } from 'react';
+import Header from './components/Header';
+import Content from './components/Content';
+
 function App() {
   return (
     <>
-      <div className=''>
-        {/* START HERE */}
-        <p className='font-bold text-2xl'>
-          Hellooooo!!
-        </p>
-      </div>
+      <Header></Header>
+      <Content></Content>
     </>
   )
 }
